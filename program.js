@@ -1,6 +1,21 @@
 var book = require("./lib/grades").book;
+var express = require('express');
+var app = express();
 
-for(var i = 2; i < process.argv.length; i += 1){
-    book.addGrade(parseInt(process.argv[i]));
-}
-console.log(book.getAverage());
+app.get("/", function(req, res){
+    res.send('Hi dude!');
+});
+
+app.get("/grade", function(req, res){
+
+    var grades = req.query.grades.split(",");
+    for(i = 0; i < grades.length; i+=1){
+        book.addGrade(parseInt(grades[i]));
+    }
+    var average = book.getAverage();
+    var letter = book.getLetterGrade();
+    res.send("your average is " + average + " grade " + letter);
+});
+
+app.listen(3000);
+console.log('Server is ready...')
